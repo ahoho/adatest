@@ -12,3 +12,4 @@ local_scratch*
 wandb
 local_data
 notebooks/TDD/data
+secret.txt
