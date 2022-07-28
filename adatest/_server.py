@@ -27,7 +27,7 @@ import functools
 log = logging.getLogger(__name__)
 
 
-def serve(test_tree_browsers, host="localhost", port=8080, static_dir=None, authenticate=lambda user, password: True,
+def serve(test_tree_browsers, host="0.0.0.0", port=8080, static_dir=None, authenticate=lambda user, password: True,
           authorize=lambda user,location: True, auth_duration=60 * 60 * 8, ssl_crt=None, ssl_key=None):
     """ Serves the interface at the given host and port.
     """
