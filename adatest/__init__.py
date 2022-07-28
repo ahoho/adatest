@@ -29,8 +29,8 @@ def embed(strings):
             return torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1), min=1e-9)
 
         # Load model from HuggingFace Hub
-        tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/stsb-roberta-base-v2')
-        model = AutoModel.from_pretrained('sentence-transformers/stsb-roberta-base-v2')
+        tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/all-mpnet-base-v2')
+        model = AutoModel.from_pretrained('sentence-transformers/all-mpnet-base-v2')
 
         # Tokenize sentences
         def embed_model(sentences):
