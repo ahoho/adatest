@@ -28,20 +28,20 @@ if __name__ == "__main__":
     parser.add_argument("--pipeline", default="text-generation")
     parser.add_argument("--eos_tokens", nargs="*", default=[])
     parser.add_argument("--openai_model", default="curie")
-    parser.add_argument("--openai_api_key", default="secret.txt", help="Path to OpenAI key (or key itself)")
+    parser.add_argument("--openai_api_key", default="~/.openai_api_key", help="Path to OpenAI key (or key itself)")
     parser.add_argument("--seed", type=int, default=11235)
     args = parser.parse_args()
     
     torch.manual_seed(args.seed)
     
     try:
-        api_key = Path("secret.txt").read_text().strip()
+        api_key = Path(args.openai_api_key).read_text().strip()
     except FileNotFoundError:
         api_key = args.openai_api_key
 
     tokenizer = AutoTokenizer.from_pretrained(args.model)
     eos_stopping_criteria = EOSStoppingCriteria(args.eos_tokens, tokenizer)
-    scorer = transformers.pipeline(
+    suffix_generator = transformers.pipeline(
         "text-generation",
         model=args.model,
         revision=args.revision,
@@ -51,10 +51,10 @@ if __name__ == "__main__":
     )
         
     # specify the backend generator used to help you write tests
-    generator = adatest.generators.OpenAI(
+    prefix_generator = adatest.generators.OpenAI(
         'curie',
         top_p=0.95,
-        filter_profanity=False,
+        filter=None,
         api_key=api_key
     )
 
@@ -67,4 +67,4 @@ if __name__ == "__main__":
 
     # adapt the tests to our model to launch a notebook-based testing interface
     # (wrap with adatest.serve to launch a standalone server)
-    adatest.serve(tests.adapt(scorer, generator, auto_save=True), port=8888)
+    adatest.serve(tests.adapt(suffix_generator, prefix_generator, auto_save=True), port=8888)
